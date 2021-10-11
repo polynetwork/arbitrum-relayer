@@ -160,21 +160,19 @@ func (p *PolyToArb) Start(ctx context.Context) {
 			}
 
 			for nextPolyHeight < height-POLY_USEFUL_BLOCK_NUM {
-				for {
-					select {
-					case <-ctx.Done():
-						return
-					default:
-					}
-					log.Infof("handling poly height:%d", nextPolyHeight)
-					err = p.handleDepositEvents(ctx, nextPolyHeight)
-					if err != nil {
-						log.Warnf("handleDepositEvents failed:%v", err)
-						sleep()
-						continue
-					}
-					nextPolyHeight++
+				select {
+				case <-ctx.Done():
+					return
+				default:
 				}
+				log.Infof("handling poly height:%d", nextPolyHeight)
+				err = p.handleDepositEvents(ctx, nextPolyHeight)
+				if err != nil {
+					log.Warnf("handleDepositEvents failed:%v", err)
+					sleep()
+					continue
+				}
+				nextPolyHeight++
 			}
 
 			err = p.bdb.UpdatePolyHeight(nextPolyHeight)

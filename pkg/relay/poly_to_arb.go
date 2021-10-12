@@ -414,7 +414,7 @@ func (p *PolyToArb) makeTx(header *polytypes.Header, param *common2.ToMerkleValu
 
 	if res {
 		log.Infof("already relayed to sidechain: ( from_chain_id: %d, to_chain_id: %d, from_txhash: %x,  param.Txhash: %x)",
-			param.FromChainID, param.MakeTxParam.ToChainID, param.TxHash, param.MakeTxParam.TxHash)
+			param.FromChainID, param.MakeTxParam.ToChainID, common.ToArrayReverse(param.TxHash), param.MakeTxParam.TxHash)
 		return nil
 	}
 
@@ -465,7 +465,7 @@ func (p *PolyToArb) isPaid(param *common2.ToMerkleValue) bool {
 		case poly_bridge_sdk.STATE_NOTPAY:
 			return false
 		case poly_bridge_sdk.STATE_NOTCHECK:
-			log.Errorf("CheckFee STATE_NOTCHECK, TxHash:%s FromChainID:%d Poly Hash:%s, wait...", txHash, param.FromChainID, hex.EncodeToString(param.TxHash))
+			log.Errorf("CheckFee STATE_NOTCHECK, TxHash:%s FromChainID:%d Poly Hash:%s, wait...", txHash, param.FromChainID, hex.EncodeToString(common.ToArrayReverse(param.TxHash)))
 			time.Sleep(time.Second)
 			continue
 		}

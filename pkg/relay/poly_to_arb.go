@@ -26,10 +26,11 @@ import (
 	"fmt"
 	"math/big"
 	"math/rand"
-	"poly_bridge_sdk"
 	"strings"
 	"sync"
 	"time"
+
+	poly_bridge_sdk "github.com/polynetwork/poly-bridge/bridgesdk"
 
 	"encoding/hex"
 
@@ -59,7 +60,7 @@ type PolyToArb struct {
 	wg              sync.WaitGroup
 	conf            *config.Config
 	polySdk         *sdk.PolySdk
-	bridgeSdk       *poly_bridge_sdk.BridgeFeeCheck
+	bridgeSdk       *poly_bridge_sdk.BridgeSdk
 	bdb             *db.BoltDB
 	clients         []*ethclient.Client
 	ccmContractAddr ethcommon.Address
@@ -76,7 +77,7 @@ func NewPolyToArb(polySdk *sdk.PolySdk, conf *config.Config) *PolyToArb {
 }
 
 func (p *PolyToArb) init(ctx context.Context) (err error) {
-	p.bridgeSdk = poly_bridge_sdk.NewBridgeFeeCheck(p.conf.BridgeConfig.RestURL, 5)
+	p.bridgeSdk = poly_bridge_sdk.NewBridgeSdk(p.conf.BridgeConfig.RestURL[0][0])
 
 	var clients []*ethclient.Client
 	for _, node := range p.conf.ArbConfig.RestURL {
@@ -457,6 +458,8 @@ func (p *PolyToArb) isPaid(param *common2.ToMerkleValue) bool {
 		}
 
 		switch resp[0].PayState {
+		case poly_bridge_sdk.STATE_NOTPOLYPROXY:
+			return false
 		case poly_bridge_sdk.STATE_HASPAY:
 			return true
 		case poly_bridge_sdk.STATE_NOTPAY:

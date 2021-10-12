@@ -11,7 +11,5 @@ require (
 	github.com/polynetwork/poly v0.0.0-20210112063446-24e3d053e9d6
 	github.com/polynetwork/poly-go-sdk v0.0.0-20210114120411-3dcba035134f
 	github.com/zhiqiangxu/util v0.0.0-20210608123940-8b5a9fec779f
-	poly_bridge_sdk v0.0.0-00010101000000-000000000000
+	github.com/polynetwork/poly-bridge/bridgesdk v0.0.2
 )
-
-replace poly_bridge_sdk => github.com/blockchain-develop/poly_bridge_sdk v0.0.0-20210327080022-0e6eb4b31700

@@ -77,7 +77,9 @@ func NewPolyToArb(polySdk *sdk.PolySdk, conf *config.Config) *PolyToArb {
 }
 
 func (p *PolyToArb) init(ctx context.Context) (err error) {
-	p.bridgeSdk = poly_bridge_sdk.NewBridgeSdk(p.conf.BridgeConfig.RestURL[0][0])
+	if !p.conf.Free {
+		p.bridgeSdk = poly_bridge_sdk.NewBridgeSdk(p.conf.BridgeConfig.RestURL[0][0])
+	}
 
 	var clients []*ethclient.Client
 	for _, node := range p.conf.ArbConfig.RestURL {
